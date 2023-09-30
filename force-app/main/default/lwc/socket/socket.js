@@ -8,6 +8,7 @@ export default class Socket extends LightningElement {
     @api recordId;
     sObject;
     @track userID = Id;
+    @track performanceEntries = [];
     error;
     user;
 
@@ -41,13 +42,25 @@ export default class Socket extends LightningElement {
           }).then( () => {
             this.messageSync();
           })
-        }
-        
+        }       
       }
+
+    renderedCallback() {
+      // Ensure this logic runs only once after initial rendering
+      if (!this.isRendered) {
+          this.isRendered = true;
+          
+          const performanceEntries = performance.getEntries();
+          for (const entry of performanceEntries) {
+              console.log(entry);
+              this.performanceEntries.push(entry);
+          }
+      }
+  }
     
-      messageSync() {
-        console.log('in the message function');
-        this.template.querySelector('c-web-sockets').sendMessage(this.sObject);
-      }
+    messageSync() {
+      console.log('in the message function');
+      this.template.querySelector('c-web-sockets').sendMessage(this.sObject);
+    }
 
 }
