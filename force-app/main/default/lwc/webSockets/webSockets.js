@@ -3,41 +3,41 @@ import websocketURL from '@salesforce/label/c.websocketURL';
   
   export default class webSockets extends LightningElement {
     @track messages = [];
-    message = '';
     socket;
 
     connectedCallback() {
       const socket = new WebSocket(websocketURL);
       socket.onmessage = (event) => {
-        console.log('this is the connection message');
-        this.messages.push(event.data);
-        console.log(event);
+        const message = JSON.parse(event.data);
+        if(message.channel === 'records'){
+          this.messages.push(event.data);
+        }else if(message.channel === 'performance'){
+          this.messages.push(event.data);
+        }else{
+          this.messages.push(event.data);
+        }
       };
-  
       socket.onopen = () => {
         console.log('Websocket connection open');
-
       };
-  
       socket.onclose = () => {
         console.log('Websocket connection closed');
       };
-  
       this.socket = socket;
     }
     
     @api
     sendMessage(record) {
-        console.log('in the message');
-        this.message = record;
-        this.socket.send(this.message);
-        this.message = '';
+      if(this.socket && this.socket.readyState === WebSocket.OPEN){
+        try{
+          let message = JSON.stringify({channel:'records',data:record});
+          this.socket.send(message);
+        }catch(error){
+          console.log('in the error '+error);
+        }
+      }else{
+        console.log('socket is not open');
+      }        
     }
 
-    send() {
-        console.log('in the message');
-        this.message = 'record';
-        this.socket.send(this.message);
-        this.message = '';
-    }
   }
