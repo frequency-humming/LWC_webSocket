@@ -8,7 +8,7 @@ export default class Socket extends LightningElement {
     @api recordId;
     sObject;
     @track userID = Id;
-    @track performanceEntries = [];
+    @track performanceEntries;
     error;
     user;
 
@@ -47,20 +47,25 @@ export default class Socket extends LightningElement {
 
     renderedCallback() {
       // Ensure this logic runs only once after initial rendering
+      let perfObj = {};
       if (!this.isRendered) {
           this.isRendered = true;
-          
+
           const performanceEntries = performance.getEntries();
           for (const entry of performanceEntries) {
-              console.log(entry);
-              this.performanceEntries.push(entry);
+            if(!perfObj[entry.entryType]){
+              perfObj[entry.entryType] = [];
+            }
+            perfObj[entry.entryType].push(entry);
           }
+          this.performanceEntries = JSON.stringify(perfObj);
       }
   }
     
-    messageSync() {
-      console.log('in the message function');
-      this.template.querySelector('c-web-sockets').sendMessage(this.sObject);
-    }
+  messageSync() {
+    console.log('in the message function');
+    let cmp = this.refs.webSocket;
+    cmp.sendMessage(this.sObject);
+  }
 
 }
