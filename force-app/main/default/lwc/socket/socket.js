@@ -45,6 +45,17 @@ export default class Socket extends LightningElement {
         }       
       }
 
+    disconnectedCallback() {
+      console.log('disconnected callback');
+      this.callDisconnect();
+    }
+
+    callDisconnect(){
+      console.log('in the disconnect function');
+      let cmp = this.refs.webSocket;
+      cmp.disconnect();
+    }
+
     /*renderedCallback() {
       // Ensure this logic runs only once after initial rendering
       let perfObj = {};
