@@ -25,6 +25,13 @@ import websocketURL from '@salesforce/label/c.websocketURL';
       };
       this.socket = socket;
     }
+
+    disconnectedCallback() {
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+          this.socket.close();
+          console.log('WebSocket disconnected due to component unmounting');
+      }
+    }
     
     @api
     sendMessage(record) {

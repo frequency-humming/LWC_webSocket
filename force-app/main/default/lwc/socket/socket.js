@@ -6,7 +6,7 @@ import Id from "@salesforce/user/Id";
 export default class Socket extends LightningElement {
 
     @api recordId;
-    sObject;
+    @track sObject;
     @track userID = Id;
     @track performanceEntries;
     error;
@@ -45,7 +45,7 @@ export default class Socket extends LightningElement {
         }       
       }
 
-    renderedCallback() {
+    /*renderedCallback() {
       // Ensure this logic runs only once after initial rendering
       let perfObj = {};
       if (!this.isRendered) {
@@ -60,7 +60,7 @@ export default class Socket extends LightningElement {
           }
           this.performanceEntries = JSON.stringify(perfObj);
       }
-  }
+  }*/
     
   messageSync() {
     console.log('in the message function');
